@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img" aria-labelledby="title desc">
+  <title id="title">Jupyter Book source flow</title>
+  <desc id="desc">A simple source to site flow for MyST, Jupytext, notebook, build, and GitHub Pages.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155" />
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="718" height="218" rx="10" fill="#f8fafc" stroke="#cbd5e1" />
+  <g font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" fill="#0f172a">
+    <g>
+      <rect x="34" y="76" width="118" height="68" rx="8" fill="#e0f2fe" stroke="#0284c7" />
+      <text x="93" y="106" text-anchor="middle" font-weight="700">MyST</text>
+      <text x="93" y="128" text-anchor="middle" font-size="13">source</text>
+    </g>
+    <g>
+      <rect x="187" y="76" width="118" height="68" rx="8" fill="#ecfccb" stroke="#65a30d" />
+      <text x="246" y="106" text-anchor="middle" font-weight="700">Jupytext</text>
+      <text x="246" y="128" text-anchor="middle" font-size="13">sync</text>
+    </g>
+    <g>
+      <rect x="340" y="76" width="118" height="68" rx="8" fill="#fef3c7" stroke="#d97706" />
+      <text x="399" y="106" text-anchor="middle" font-weight="700">Notebook</text>
+      <text x="399" y="128" text-anchor="middle" font-size="13">ipynb</text>
+    </g>
+    <g>
+      <rect x="493" y="76" width="118" height="68" rx="8" fill="#ede9fe" stroke="#7c3aed" />
+      <text x="552" y="106" text-anchor="middle" font-weight="700">Build</text>
+      <text x="552" y="128" text-anchor="middle" font-size="13">HTML</text>
+    </g>
+    <g>
+      <rect x="570" y="164" width="128" height="44" rx="8" fill="#fee2e2" stroke="#dc2626" />
+      <text x="634" y="192" text-anchor="middle" font-size="15" font-weight="700">GitHub Pages</text>
+    </g>
+    <path d="M152 110 H180" stroke="#334155" stroke-width="3" marker-end="url(#arrow)" />
+    <path d="M305 110 H333" stroke="#334155" stroke-width="3" marker-end="url(#arrow)" />
+    <path d="M458 110 H486" stroke="#334155" stroke-width="3" marker-end="url(#arrow)" />
+    <path d="M552 144 V156" stroke="#334155" stroke-width="3" marker-end="url(#arrow)" />
+  </g>
+</svg>

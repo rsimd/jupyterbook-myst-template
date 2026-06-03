@@ -11,11 +11,17 @@
     "article.article h3[id]",
     "article.article h4[id]",
   ].join(", ");
+  const MARGIN_ASIDE_SELECTOR = "article.article .myst-jp-nb-block aside.myst-aside";
+  const MARGIN_ASIDE_CONTAINER_SELECTOR = ".hdl-margin-asides";
+  const MARGIN_ASIDE_ANCHOR_CLASS = "hdl-margin-aside-anchor";
   const RIGHT_MARGIN_CONTENT_SELECTOR = [
     "article.article > aside",
     "article.article > .col-page-right",
     "article.article > .col-margin-right",
+    ".hdl-margin-asides > aside.myst-aside",
   ].join(", ");
+  let marginAsideId = 0;
+  let marginAsideUpdateScheduled = false;
   const COLAB_ICON = [
     '<svg class="myst-fm-colab-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">',
     '<path d="M14.8 4.9c1.4-.9 3.2-1 4.7-.2 2.9 1.5 3.9 5 2.3 7.8l-1.1 2c-1.6 2.8-5.2 3.8-8 2.3-.7-.4-1.3-.9-1.8-1.5l2.1-1.2c.3.3.6.5.9.7 1.8 1 4.1.3 5.1-1.5l1.1-2c1-1.8.3-4-1.5-5-1-.6-2.2-.6-3.2 0l-.6-1.4ZM9.2 19.1c-1.4.9-3.2 1-4.7.2-2.9-1.5-3.9-5-2.3-7.8l1.1-2c1.6-2.8 5.2-3.8 8-2.3.7.4 1.3.9 1.8 1.5L11 9.9c-.3-.3-.6-.5-.9-.7-1.8-1-4.1-.3-5.1 1.5l-1.1 2c-1 1.8-.3 4 1.5 5 1 .6 2.2.6 3.2 0l.6 1.4Zm7.2-10.6 1.9 1.1-10.7 6-1.9-1.1 10.7-6Z"></path>',
@@ -318,15 +324,111 @@
     return item;
   }
 
+  function asideKey(aside) {
+    return (aside.textContent || "").replace(/\s+/g, " ").trim();
+  }
+
+  function nextMarginAsideId() {
+    marginAsideId += 1;
+    return `hdl-margin-aside-${marginAsideId}`;
+  }
+
+  function ensureAsideAnchor(aside) {
+    const existingId = aside.dataset.hdlMarginAnchor;
+    if (existingId && document.getElementById(existingId)) return existingId;
+
+    const id = nextMarginAsideId();
+    const anchor = document.createElement("span");
+    anchor.id = id;
+    anchor.className = MARGIN_ASIDE_ANCHOR_CLASS;
+    anchor.setAttribute("aria-hidden", "true");
+    aside.before(anchor);
+    aside.dataset.hdlMarginAnchor = id;
+    return id;
+  }
+
+  function activeMarginAsides(container) {
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 800;
+    const topLimit = Math.max(72, viewportHeight * 0.16);
+    const bottomLimit = Math.min(viewportHeight * 0.74, topLimit + 420);
+    return Array.from(container.querySelectorAll("aside.myst-aside")).filter((aside) => {
+      const anchor = document.getElementById(aside.dataset.hdlMarginAnchor || "");
+      if (!anchor) return false;
+      const rect = anchor.getBoundingClientRect();
+      return rect.top >= topLimit && rect.top <= bottomLimit;
+    });
+  }
+
+  function updateMarginAsideVisibility(nav) {
+    const container = nav.querySelector(MARGIN_ASIDE_CONTAINER_SELECTOR);
+    if (!container) return false;
+
+    const activeAsides = new Set(activeMarginAsides(container));
+    const hasActiveAsides = activeAsides.size > 0;
+    Array.from(container.querySelectorAll("aside.myst-aside")).forEach((aside) => {
+      aside.toggleAttribute("hidden", !activeAsides.has(aside));
+    });
+    container.toggleAttribute("hidden", !hasActiveAsides);
+    nav.classList.toggle("hdl-margin-active", hasActiveAsides);
+    return hasActiveAsides;
+  }
+
+  function scheduleMarginAsideVisibilityUpdate() {
+    if (marginAsideUpdateScheduled) return;
+    marginAsideUpdateScheduled = true;
+    window.requestAnimationFrame(() => {
+      marginAsideUpdateScheduled = false;
+      const nav = document.querySelector(PAGE_OUTLINE_NAV_SELECTOR);
+      if (nav) updateMarginAsideVisibility(nav);
+    });
+  }
+
+  function ensureMarginAsides(nav) {
+    const sourceAsides = Array.from(document.querySelectorAll(MARGIN_ASIDE_SELECTOR)).filter(
+      (aside) => !aside.closest(".hdl-margin-asides"),
+    );
+    if (!sourceAsides.length) {
+      updateMarginAsideVisibility(nav);
+      return false;
+    }
+
+    let container = nav.querySelector(".hdl-margin-asides");
+    if (!container) {
+      container = document.createElement("div");
+      container.className = "hdl-margin-asides";
+      nav.prepend(container);
+    }
+
+    const existingKeys = new Set(
+      Array.from(container.querySelectorAll("aside.myst-aside")).map(asideKey),
+    );
+    sourceAsides.forEach((aside) => {
+      const key = asideKey(aside);
+      if (existingKeys.has(key)) {
+        aside.remove();
+        return;
+      }
+      ensureAsideAnchor(aside);
+      aside.classList.add("hdl-margin-aside");
+      aside.removeAttribute("style");
+      aside.setAttribute("hidden", "");
+      container.appendChild(aside);
+      existingKeys.add(key);
+    });
+    updateMarginAsideVisibility(nav);
+    return true;
+  }
+
   function ensurePageOutline() {
     const nav = document.querySelector(PAGE_OUTLINE_NAV_SELECTOR);
     if (!nav) return false;
-    if (nav.dataset.hdlPageOutline === "true") return false;
+    const asideChanged = ensureMarginAsides(nav);
+    if (nav.dataset.hdlPageOutline === "true") return asideChanged;
 
     const headings = Array.from(document.querySelectorAll(PAGE_OUTLINE_HEADING_SELECTOR)).filter(
       shouldIncludeOutlineHeading,
     );
-    if (!headings.length) return false;
+    if (!headings.length) return asideChanged;
 
     const outline = document.createElement("div");
     outline.className = "hdl-page-outline";
@@ -341,8 +443,9 @@
     headings.forEach((heading) => list.appendChild(createPageOutlineLink(heading)));
     outline.appendChild(list);
 
-    nav.replaceChildren(outline);
+    nav.appendChild(outline);
     nav.dataset.hdlPageOutline = "true";
+    updateMarginAsideVisibility(nav);
     return true;
   }
 
@@ -584,6 +687,7 @@
       ensurePageOutline();
       ensurePrimaryTocFolders();
       highlightCodeBlocks();
+      syncButtonState();
       attempts += 1;
       if (!ready && attempts < 20) {
         window.setTimeout(retry, 250);
@@ -598,6 +702,7 @@
       ensurePageOutline();
       ensurePrimaryTocFolders();
       highlightCodeBlocks();
+      syncButtonState();
     });
     observer.observe(document.body, { childList: true, subtree: true });
   }
@@ -629,6 +734,8 @@
     },
     true,
   );
+  window.addEventListener("scroll", scheduleMarginAsideVisibilityUpdate, { passive: true });
+  window.addEventListener("resize", scheduleMarginAsideVisibilityUpdate);
 
   if (document.readyState === "loading") {
     document.addEventListener(
