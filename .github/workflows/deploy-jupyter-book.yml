@@ -1,0 +1,70 @@
+name: Deploy Jupyter Book
+
+on:
+  push:
+    branches: [main]
+
+env:
+  BASE_URL: /${{ github.event.repository.name }}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Generate paired notebooks
+        run: |
+          mkdir -p notebooks
+          for src in notebooks-src/*.md; do
+            name="$(basename "$src" .md)"
+            uv run jupytext --to ipynb --output "notebooks/${name}.ipynb" "$src"
+          done
+
+      - name: Build Jupyter Book site
+        run: uv run jupyter-book build --html --ci
+
+      - name: Sync standalone HTML assets
+        run: |
+          mkdir -p _build/html/assets _build/html/demos _build/html/slides
+          if compgen -G "assets/*.html" > /dev/null; then cp assets/*.html _build/html/assets/; fi
+          if compgen -G "demos/*.html" > /dev/null; then cp demos/*.html _build/html/demos/; fi
+          if compgen -G "slides/*.html" > /dev/null; then cp slides/*.html _build/html/slides/; fi
+
+      - name: Inject site interactions
+        run: uv run python scripts/postprocess_html.py
+
+      - name: Add .nojekyll for GitHub Pages
+        run: touch _build/html/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _build/html
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

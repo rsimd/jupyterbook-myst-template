@@ -1,0 +1,25 @@
+# Jupyter Book 2 / MyST template.
+version: 1
+project:
+  title: "Jupyter Book MyST Template"
+  description: "Reusable Jupyter Book 2 / MyST template with collapsible sidebars, numeric citations, and stable local previews."
+  github: https://github.com/rsimd/jupyterbook-myst-template
+  bibliography:
+    - references.bib
+  toc:
+    - file: notebooks/index.ipynb
+    - title: Sample Chapter
+      children:
+        - file: notebooks/demo.ipynb
+site:
+  template: book-theme
+  options:
+    logo_text: "Jupyter Book MyST Template"
+    numbered_references: true
+    style: styles/site.css
+  parts:
+    navbar_end: |
+      <a class="hdl-sidebar-toggle hdl-sidebar-toggle-left" href="javascript:void 0" role="button" title="Toggle Table of Contents">Table of Contents</a>
+      <a class="hdl-sidebar-toggle hdl-sidebar-toggle-right" href="javascript:void 0" role="button" title="Toggle On this page">On this page</a>
+    primary_sidebar_footer: |
+      <span class="hdl-sidebar-brand">Jupyter Book MyST Template</span>
