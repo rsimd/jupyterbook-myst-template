@@ -5,7 +5,10 @@
   const LEFT_SELECTOR = ".hdl-sidebar-toggle-left";
   const RIGHT_SELECTOR = ".hdl-sidebar-toggle-right";
   const TOGGLE_SELECTOR = `${LEFT_SELECTOR}, ${RIGHT_SELECTOR}`;
-  const PAGE_OUTLINE_NAV_SELECTOR = "article.article > .lg\\:col-margin-right > nav";
+  const PAGE_OUTLINE_NAV_SELECTOR = [
+    "article.article > .lg\\:col-margin-right > nav",
+    "article.article > .lg\\:col-margin-right nav.myst-outline",
+  ].join(", ");
   const PAGE_OUTLINE_HEADING_SELECTOR = [
     "article.article h2[id]",
     "article.article h3[id]",
@@ -422,6 +425,7 @@
   function ensurePageOutline() {
     const nav = document.querySelector(PAGE_OUTLINE_NAV_SELECTOR);
     if (!nav) return false;
+    nav.classList.add("hdl-outline-enhanced");
     const asideChanged = ensureMarginAsides(nav);
     if (nav.dataset.hdlPageOutline === "true") return asideChanged;
 
