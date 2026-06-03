@@ -267,6 +267,10 @@ nav.hdl-outline-enhanced .CollapsibleContent {
   display: none !important;
 }
 
+nav.hdl-outline-enhanced {
+  position: relative;
+}
+
 .hdl-page-outline-depth-3 {
   padding-left: 0.9rem;
 }
@@ -304,9 +308,15 @@ nav.hdl-outline-enhanced .CollapsibleContent {
 }
 
 .hdl-margin-asides {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
   display: grid;
+  width: min(15.25rem, 100%);
   gap: 0.75rem;
-  margin: 0 0 1rem;
+  margin: 0;
+  pointer-events: none;
 }
 
 .hdl-margin-asides[hidden],
@@ -324,7 +334,9 @@ nav.hdl-outline-enhanced .CollapsibleContent {
   border-left: 4px solid #f59e0b;
   border-radius: 8px;
   background: #f8fafc;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
   color: #334155;
+  pointer-events: auto;
 }
 
 .hdl-margin-asides aside.myst-aside .myst-aside-title {
