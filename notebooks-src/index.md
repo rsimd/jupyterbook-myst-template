@@ -32,10 +32,7 @@ kernelspec:
 
 ```bash
 uv sync --all-groups
-uv run jupytext --to ipynb --output notebooks/index.ipynb notebooks-src/index.md
-uv run jupytext --to ipynb --output notebooks/demo.ipynb notebooks-src/demo.md
-BASE_URL=/jupyterbook-myst-template uv run jupyter-book build --html --ci
-BASE_URL=/jupyterbook-myst-template uv run python scripts/postprocess_html.py
+uv run python scripts/build_site.py --target github
 ```
 
 ローカルで `_build/html` を直接配信する場合は，`BASE_URL` を空にして build/postprocess する。

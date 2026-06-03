@@ -13,17 +13,37 @@ ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK_SOURCE_DIR = ROOT / "notebooks-src"
 NOTEBOOK_OUTPUT_DIR = ROOT / "notebooks"
 BUILD_OUTPUT_DIR = ROOT / "_build" / "html"
+JUPYTER_CACHE_DIR = ROOT / ".jupyter_cache"
+
+
+def base_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env.setdefault("JUPYTER_CONFIG_DIR", str(JUPYTER_CACHE_DIR / "config"))
+    env.setdefault("JUPYTER_DATA_DIR", str(JUPYTER_CACHE_DIR / "data"))
+    env.setdefault("JUPYTER_RUNTIME_DIR", str(JUPYTER_CACHE_DIR / "runtime"))
+    return env
 
 
 def run(command: list[str], env: dict[str, str] | None = None) -> None:
-    subprocess.run(command, cwd=ROOT, env=env, check=True)
+    subprocess.run(command, cwd=ROOT, env=env or base_env(), check=True)
 
 
 def sync_notebooks() -> None:
     NOTEBOOK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     for source in sorted(NOTEBOOK_SOURCE_DIR.glob("*.md")):
         output = NOTEBOOK_OUTPUT_DIR / f"{source.stem}.ipynb"
-        run(["uv", "run", "jupytext", "--to", "ipynb", "--output", str(output), str(source)])
+        run(
+            [
+                "uv",
+                "run",
+                "jupytext",
+                "--to",
+                "ipynb",
+                "--output",
+                str(output),
+                str(source),
+            ]
+        )
 
 
 def sync_standalone_html() -> None:
@@ -38,7 +58,7 @@ def sync_standalone_html() -> None:
 
 
 def build(base_url: str) -> None:
-    env = os.environ.copy()
+    env = base_env()
     if base_url:
         env["BASE_URL"] = base_url
     else:
@@ -71,7 +91,7 @@ def main() -> None:
     if args.base_url is not None:
         base_url = args.base_url
     elif args.target == "github":
-        base_url = os.environ.get("BASE_URL", "")
+        base_url = os.environ.get("BASE_URL", f"/{ROOT.name}")
     else:
         base_url = ""
 

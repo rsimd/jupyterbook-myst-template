@@ -8,9 +8,8 @@ project:
     - references.bib
   toc:
     - file: notebooks/index.ipynb
-    - title: Sample Chapter
-      children:
-        - file: notebooks/demo.ipynb
+    - file: notebooks/demo.ipynb
+    - file: notebooks/aside.ipynb
 site:
   template: book-theme
   options:

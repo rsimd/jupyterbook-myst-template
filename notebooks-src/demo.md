@@ -23,11 +23,12 @@ MyST の引用記法は公式ドキュメントにもまとめられている [@
 ## Python Code
 
 ```{code-cell} python
-import numpy as np
+def sigmoid(x: float) -> float:
+    return 1.0 / (1.0 + 2.718281828459045 ** (-x))
 
-x = np.linspace(-4.0, 4.0, 9)
-y = 1.0 / (1.0 + np.exp(-x))
-print(np.round(y, 3))
+
+values = [-4, -2, 0, 2, 4]
+print([round(sigmoid(x), 3) for x in values])
 ```
 
 ## Nested Heading

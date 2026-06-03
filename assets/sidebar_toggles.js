@@ -12,9 +12,9 @@
     "article.article h4[id]",
   ].join(", ");
   const RIGHT_MARGIN_CONTENT_SELECTOR = [
-    "article.article aside",
-    "article.article .col-page-right",
-    "article.article .col-margin-right",
+    "article.article > aside",
+    "article.article > .col-page-right",
+    "article.article > .col-margin-right",
   ].join(", ");
   const COLAB_ICON = [
     '<svg class="myst-fm-colab-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">',

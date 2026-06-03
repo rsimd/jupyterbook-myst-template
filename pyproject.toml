@@ -4,12 +4,6 @@ version = "0.1.0"
 description = "Reusable Jupyter Book 2 / MyST template with PRML-style navigation and local preview helpers"
 readme = "README.md"
 requires-python = ">=3.12.2"
-dependencies = [
-    "ipython>=9.12.0",
-    "jupyter>=1.1.1",
-    "matplotlib>=3.10.8",
-    "numpy>=2.4.4",
-]
 
 [dependency-groups]
 dev = [

@@ -10,6 +10,7 @@ Jupyter Book 2 / MyST 用の再利用可能なテンプレートです。`NITIC-
 - Citation links jump to the page References first; bibliography entries can link to DOI or URL.
 - Local preview postprocess for MyST base-path drift and the BASE_URL fallback dialog.
 - Jupytext workflow with `notebooks-src/*.md` as editable sources and `notebooks/*.ipynb` as published notebooks.
+- Top-level sample pages for citations, code cells, and aside margin content.
 - GitHub Pages deployment workflow and Cloudflare Pages build settings.
 
 ## Use This Template
