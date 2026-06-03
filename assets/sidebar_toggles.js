@@ -365,7 +365,8 @@
       }
 
       const anchorTop = anchor.getBoundingClientRect().top;
-      const visible = anchorTop >= navRect.top && anchorTop <= viewportHeight - 80;
+      const asideHeight = aside.offsetHeight || 0;
+      const visible = anchorTop + asideHeight >= 0 && anchorTop <= viewportHeight;
       aside.style.top = `${Math.round(anchorTop - navRect.top)}px`;
       aside.toggleAttribute("hidden", !visible);
       hasVisibleAside = hasVisibleAside || visible;
