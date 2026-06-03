@@ -350,30 +350,30 @@
     return id;
   }
 
-  function activeMarginAsides(container) {
+  function currentMarginAside(container) {
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 800;
-    const topLimit = Math.max(72, viewportHeight * 0.16);
-    const bottomLimit = Math.min(viewportHeight * 0.74, topLimit + 420);
-    return Array.from(container.querySelectorAll("aside.myst-aside")).filter((aside) => {
+    const triggerLimit = Math.min(Math.max(360, viewportHeight * 0.62), viewportHeight - 160);
+    const asides = Array.from(container.querySelectorAll("aside.myst-aside"));
+    const visibleAsides = asides.filter((aside) => {
       const anchor = document.getElementById(aside.dataset.hdlMarginAnchor || "");
       if (!anchor) return false;
-      const rect = anchor.getBoundingClientRect();
-      return rect.top >= topLimit && rect.top <= bottomLimit;
+      return anchor.getBoundingClientRect().top <= triggerLimit;
     });
+
+    return visibleAsides[visibleAsides.length - 1] || null;
   }
 
   function updateMarginAsideVisibility(nav) {
     const container = nav.querySelector(MARGIN_ASIDE_CONTAINER_SELECTOR);
     if (!container) return false;
 
-    const activeAsides = new Set(activeMarginAsides(container));
-    const hasActiveAsides = activeAsides.size > 0;
+    const activeAside = currentMarginAside(container);
     Array.from(container.querySelectorAll("aside.myst-aside")).forEach((aside) => {
-      aside.toggleAttribute("hidden", !activeAsides.has(aside));
+      aside.toggleAttribute("hidden", aside !== activeAside);
     });
-    container.toggleAttribute("hidden", !hasActiveAsides);
-    nav.classList.toggle("hdl-margin-active", hasActiveAsides);
-    return hasActiveAsides;
+    container.toggleAttribute("hidden", !activeAside);
+    nav.classList.toggle("hdl-margin-active", !!activeAside);
+    return !!activeAside;
   }
 
   function scheduleMarginAsideVisibilityUpdate() {

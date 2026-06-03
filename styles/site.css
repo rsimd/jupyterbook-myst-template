@@ -267,10 +267,6 @@ nav.hdl-outline-enhanced .CollapsibleContent {
   display: none !important;
 }
 
-.hdl-margin-active .hdl-page-outline {
-  display: none;
-}
-
 .hdl-page-outline-depth-3 {
   padding-left: 0.9rem;
 }
