@@ -350,30 +350,29 @@
     return id;
   }
 
-  function currentMarginAside(container) {
-    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 800;
-    const triggerLimit = Math.min(Math.max(360, viewportHeight * 0.62), viewportHeight - 160);
-    const asides = Array.from(container.querySelectorAll("aside.myst-aside"));
-    const visibleAsides = asides.filter((aside) => {
-      const anchor = document.getElementById(aside.dataset.hdlMarginAnchor || "");
-      if (!anchor) return false;
-      return anchor.getBoundingClientRect().top <= triggerLimit;
-    });
-
-    return visibleAsides[visibleAsides.length - 1] || null;
-  }
-
   function updateMarginAsideVisibility(nav) {
     const container = nav.querySelector(MARGIN_ASIDE_CONTAINER_SELECTOR);
     if (!container) return false;
 
-    const activeAside = currentMarginAside(container);
+    const navRect = nav.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 800;
+    let hasVisibleAside = false;
     Array.from(container.querySelectorAll("aside.myst-aside")).forEach((aside) => {
-      aside.toggleAttribute("hidden", aside !== activeAside);
+      const anchor = document.getElementById(aside.dataset.hdlMarginAnchor || "");
+      if (!anchor) {
+        aside.setAttribute("hidden", "");
+        return;
+      }
+
+      const anchorTop = anchor.getBoundingClientRect().top;
+      const visible = anchorTop >= navRect.top && anchorTop <= viewportHeight - 80;
+      aside.style.top = `${Math.round(anchorTop - navRect.top)}px`;
+      aside.toggleAttribute("hidden", !visible);
+      hasVisibleAside = hasVisibleAside || visible;
     });
-    container.toggleAttribute("hidden", !activeAside);
-    nav.classList.toggle("hdl-margin-active", !!activeAside);
-    return !!activeAside;
+    container.toggleAttribute("hidden", !hasVisibleAside);
+    nav.classList.toggle("hdl-margin-active", hasVisibleAside);
+    return hasVisibleAside;
   }
 
   function scheduleMarginAsideVisibilityUpdate() {

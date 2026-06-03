@@ -312,10 +312,10 @@ nav.hdl-outline-enhanced {
   top: 0;
   left: 0;
   z-index: 2;
-  display: grid;
   width: min(15.25rem, 100%);
-  gap: 0.75rem;
+  height: 0;
   margin: 0;
+  overflow: visible;
   pointer-events: none;
 }
 
@@ -325,6 +325,8 @@ nav.hdl-outline-enhanced {
 }
 
 .hdl-margin-asides aside.myst-aside {
+  position: absolute;
+  left: 0;
   box-sizing: border-box;
   width: 100%;
   height: auto !important;
