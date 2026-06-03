@@ -14,7 +14,7 @@ kernelspec:
 # Aside Block
 
 このページでは，本文の右余白に補足情報を置く `aside` ブロックと，教材でよく使う MyST / Jupyter Book のブロックをまとめて確認する。
-ページを長めにしているので，右余白に margin / aside がない区間では On this page が表示され，該当する補足位置に近づくと右余白が margin / aside に切り替わる。
+ページを長めにしているので，冒頭では On this page だけが表示され，補足位置に近づくと Margin Note がその上に重なって表示される。
 
 ## Outline Only Section
 
@@ -27,7 +27,7 @@ kernelspec:
 
 ### Plain Paragraphs
 
-長い文章だけの区間を用意して，右余白が outline に戻ることを確認する。
+長い文章だけの区間を用意して，右余白に outline だけが表示される初期状態を確認する。
 たとえば，確率モデルの授業では，記号の導入，データの仮定，推定したい量を順番に説明する。
 このとき，本文に直接必要な情報は段落として置き，歴史的背景や読み飛ばしてもよい注意だけを margin / aside に逃がす。
 
@@ -49,7 +49,7 @@ Markdown の基本ブロックも通常通り使える。
 :::
 
 この見出し付近までスクロールすると，右余白に Margin Note が表示される。
-補足が画面から離れると，右余白は再び On this page に戻る。
+表示された Margin Note はスクロールしても残り，On this page の上に置かれる。
 
 本文側には通常の見出し，段落，コード，数式を置ける。
 aside は本文の理解を助ける短い情報に向いている。
@@ -141,7 +141,7 @@ L(\theta) = - \sum_{n=1}^{N} \log p(x_n \mid \theta)
 :::
 
 この区間ではもう一つ aside を置いている。
-式の近くまでスクロールしたときだけ右余白が Formula Note に変わり，離れると On this page に戻る。
+式の近くまでスクロールすると右余白が Formula Note に変わり，次の補足が出るまで On this page の上に残る。
 
 ## Table Blocks
 
@@ -182,7 +182,7 @@ MyST source を notebook に同期し，Jupyter Book で HTML 化して GitHub P
 ## Long Outline Gap
 
 この区間には margin / aside を置かない。
-右余白が On this page に戻っているかを確認するための長い本文区間である。
+直前の Formula Note が On this page の上に残ることを確認するための長い本文区間である。
 
 ### Gap Paragraph 1
 
@@ -198,8 +198,8 @@ MyST source を notebook に同期し，Jupyter Book で HTML 化して GitHub P
 
 ### Gap Paragraph 3
 
-さらにスクロールすると，直前の margin note は表示されなくなる。
-ここで右余白に On this page が表示されていれば，margin / aside が本文全体を占有していないことを確認できる。
+さらにスクロールしても，直前の margin note は右余白に残る。
+ここで On this page も同時に表示されていれば，margin / aside がページ内移動の手がかりを潰していないことを確認できる。
 
 ## Second Margin Section
 
@@ -220,4 +220,4 @@ MyST source を notebook に同期し，Jupyter Book で HTML 化して GitHub P
 ## Summary
 
 教材ページでは，式変形の補足や読み飛ばしてよい背景説明を aside に逃がすと，本文の主線を保ちやすい。
-一方で，補足がない区間では On this page を表示しておくと，長い教材でも構造を見失いにくい。
+On this page を閉じずに残し，現在の margin note をその上に置くと，補足とページ構造を同時に確認できる。
