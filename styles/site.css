@@ -209,7 +209,8 @@ body.hdl-sidebar-right-locked .hdl-sidebar-toggle-right:focus-visible,
 
 body.hdl-sidebar-left-collapsed .myst-primary-sidebar,
 body.hdl-sidebar-right-collapsed article.article > .lg\:col-margin-right,
-body.hdl-sidebar-right-collapsed .hdl-page-outline {
+body.hdl-sidebar-right-collapsed .hdl-page-outline,
+body.hdl-sidebar-right-collapsed .hdl-margin-asides {
   display: none !important;
   pointer-events: none !important;
   visibility: hidden !important;
@@ -308,11 +309,11 @@ nav.hdl-outline-enhanced {
 }
 
 .hdl-margin-asides {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 2;
-  width: min(15.25rem, 100%);
+  z-index: 20;
+  width: min(15.25rem, var(--hdl-margin-aside-max-width, calc(100vw - 1rem)));
   height: 0;
   margin: 0;
   overflow: visible;

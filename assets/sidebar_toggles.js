@@ -336,6 +336,18 @@
     return `hdl-margin-aside-${marginAsideId}`;
   }
 
+  function ensureMarginAsideContainer() {
+    let container = document.querySelector(MARGIN_ASIDE_CONTAINER_SELECTOR);
+    if (!container) {
+      container = document.createElement("div");
+      container.className = "hdl-margin-asides";
+    }
+    if (container.parentElement !== document.body) {
+      document.body.appendChild(container);
+    }
+    return container;
+  }
+
   function ensureAsideAnchor(aside) {
     const existingId = aside.dataset.hdlMarginAnchor;
     if (existingId && document.getElementById(existingId)) return existingId;
@@ -351,11 +363,17 @@
   }
 
   function updateMarginAsideVisibility(nav) {
-    const container = nav.querySelector(MARGIN_ASIDE_CONTAINER_SELECTOR);
+    const container = document.querySelector(MARGIN_ASIDE_CONTAINER_SELECTOR);
     if (!container) return false;
 
     const navRect = nav.getBoundingClientRect();
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 1024;
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 800;
+    container.style.left = `${Math.round(navRect.left)}px`;
+    container.style.setProperty(
+      "--hdl-margin-aside-max-width",
+      `${Math.max(0, Math.round(viewportWidth - navRect.left - 16))}px`,
+    );
     let hasVisibleAside = false;
     Array.from(container.querySelectorAll("aside.myst-aside")).forEach((aside) => {
       const anchor = document.getElementById(aside.dataset.hdlMarginAnchor || "");
@@ -365,10 +383,13 @@
       }
 
       const anchorTop = anchor.getBoundingClientRect().top;
-      const asideHeight = aside.offsetHeight || 0;
+      const asideHeight = aside.offsetHeight || Number(aside.dataset.hdlMarginHeight) || 160;
       const visible = anchorTop + asideHeight >= 0 && anchorTop <= viewportHeight;
-      aside.style.top = `${Math.round(anchorTop - navRect.top)}px`;
+      aside.style.top = `${Math.round(anchorTop)}px`;
       aside.toggleAttribute("hidden", !visible);
+      if (visible && aside.offsetHeight) {
+        aside.dataset.hdlMarginHeight = String(Math.round(aside.offsetHeight));
+      }
       hasVisibleAside = hasVisibleAside || visible;
     });
     container.toggleAttribute("hidden", !hasVisibleAside);
@@ -395,12 +416,7 @@
       return false;
     }
 
-    let container = nav.querySelector(".hdl-margin-asides");
-    if (!container) {
-      container = document.createElement("div");
-      container.className = "hdl-margin-asides";
-      nav.prepend(container);
-    }
+    const container = ensureMarginAsideContainer();
 
     const existingKeys = new Set(
       Array.from(container.querySelectorAll("aside.myst-aside")).map(asideKey),
