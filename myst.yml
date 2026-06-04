@@ -10,6 +10,17 @@ project:
     - file: notebooks/index.ipynb
     - file: notebooks/demo.ipynb
     - file: notebooks/aside.ipynb
+    - title: Chapter Group
+      children:
+        - file: notebooks/chapter-group-overview.ipynb
+        - file: notebooks/chapter-group-methods.ipynb
+        - file: notebooks/chapter-group-summary.ipynb
+    - file: notebooks/page-chapter.ipynb
+      title: Page Chapter
+      children:
+        - file: notebooks/page-chapter-setup.ipynb
+        - file: notebooks/page-chapter-details.ipynb
+        - file: notebooks/page-chapter-wrapup.ipynb
 site:
   template: book-theme
   options:
