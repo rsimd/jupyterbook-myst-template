@@ -1,0 +1,8 @@
+\REQUIRE training data $D$, step size $\eta$, initial parameter $w_0$
+\ENSURE updated parameter $w$
+\STATE $w \gets w_0$
+\FOR{each mini-batch $B \subset D$}
+  \STATE compute the gradient $g_B$ on $B$
+  \STATE $w \gets w - \eta g_B$
+\ENDFOR
+\RETURN $w$

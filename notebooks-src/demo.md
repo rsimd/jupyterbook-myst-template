@@ -50,6 +50,15 @@ Sphinx / Jupyter Book 由来の `prf:algorithm` を使うと，pseudocode.js を
 3. Return $w$.
 :::
 
+同じ内容を pseudocode.js でレンダリングすると，次のように line number 付きの algorithm 表示になる。
+
+<iframe
+  class="pseudocode-frame"
+  src="../assets/batch-update-pseudocode.html"
+  title="Batch Update rendered with pseudocode.js"
+  loading="lazy"
+></iframe>
+
 ## Nested Heading
 
 右側の On this page は `h2` から `h4` を拾う。

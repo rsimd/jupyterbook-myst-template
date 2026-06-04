@@ -419,6 +419,32 @@ article.article .myst-jp-nb-block > .myst-jp-nb-block.sticky {
   }
 }
 
+.pseudocode-frame {
+  display: block;
+  width: min(760px, 100%);
+  margin: 1rem 0 1.25rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.pseudocode-frame > div {
+  width: 100% !important;
+  height: 300px !important;
+  padding-bottom: 0 !important;
+}
+
+.pseudocode-frame iframe {
+  border: 0 !important;
+}
+
+@media (max-width: 720px) {
+  .pseudocode-frame > div {
+    height: 360px !important;
+  }
+}
+
 .som-demo-frame {
   display: block;
   width: min(1040px, 100%);
